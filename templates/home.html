@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Scrapper</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"> <!-- pico는 css 예쁘게 적용해주기 -->
+</head>
+<body>
+    <main class="container"> <!--pico css 기능 써서 가운데 정렬 & 예쁘게 하기 (class container 필수)-->
+        
+        <h1>Job Scrapper</h1>
+        <h1>Hello to you! Name is {{name}}</h1>
+        <!-- main.py에서 넘겨준 이름이 출력됨 -->
+        <form action="/search">
+            <input type="text" name="keyword" placeholder="Write keyword please" />
+            <!--input에 입력하면 url에 ?keyword=~~ 추가됨 (get방식이기 때문)-->
+
+            <button>Search</button>
+        </form>
+        
+    </main>
+</body>
+</html>

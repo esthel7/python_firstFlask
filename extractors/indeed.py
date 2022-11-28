@@ -1,15 +1,27 @@
 from requests import get # requests 모듈에서 get(웹사이트 열기)을 사용
 from bs4 import BeautifulSoup # bs4 모듈에서 beautifulSoup(html 코드 추출)을 사용
+from selenium import webdriver
+#selenium은 브라우저를 자동화시킴. 자동으로 페이지 열고 실행하도록(사람이 하는 것처럼)
+#webdriver는 파이썬이 브라우저를 시작하도록 함
+from selenium.webdriver.chrome.options import Options
+
+options=Options() #selenium 사용 위함
+options.add_argument("--no--sandbox") #selenium 사용 위함
+options.add_argument("--disable-dev-shm-usage") #selenium 사용 위함
+
 
 def get_page_count(keyword):
-    base_url="https://kr.indeed.com/jobs?q="
-    response=get(f"{base_url}{keyword}") #f"{base_url}{keyword}" = base_url+keyword
 
-    if response.status_code!=200:
-        print('error',response.status_code)
-    else:
-        soup=BeautifulSoup(response.text, "html.parser")
-        #response.text는 response 페이지의 모든 html
+    #response=get(f"{base_url}{keyword}") #f"{base_url}{keyword}" = base_url+keyword
+    #response는 봇으로 인지해서 사용x (해당 페이지에서 봇 사용을 금지해놓음)
+
+    browser=webdriver.Chrome(options=options)
+    browser.get("https://kr.indeed.com/jobs?q=python&limit=50") #페이지 열기
+
+    if browser.page_source: #browser.page_source가 있다면
+        #browser.page_source는 해당 페이지의 모든 html
+
+        soup=BeautifulSoup(browser.page_source, "html.parser")
         #html.parser 입력해서 변수 soup에게 html 보낸다고 알리기
 
         pagination=soup.find("ul",class_="pagination-list") #해당 페이지의 페이지 수(footer의 1,2,3,... 등등)
@@ -25,21 +37,25 @@ def get_page_count(keyword):
             return 5
         else:
             return count
+    else:
+        print('error')
 
 def extract_indeed_jobs(keyword):
     pages=get_page_count(keyword)
     results=[]
 
     for page in range(pages):
-        base_url="https://kr.indeed.com/jobs"
-        response=get(f"{base_url}?q={keyword}&start={page*10}") #f"{base_url}{keyword}" = base_url+keyword
-        # start=~~는 해당 페이지의 주소 규칙을 따른 것
 
-        if response.status_code!=200:
-            print('error',response.status_code)
-        else:
-            soup=BeautifulSoup(response.text, "html.parser")
-            #response.text는 response 페이지의 모든 html
+        # response=get(f"{base_url}?q={keyword}&start={page*10}") #f"{base_url}{keyword}" = base_url+keyword
+        # start=~~는 해당 페이지의 주소 규칙을 따른 것
+        #response는 봇으로 인지해서 사용x (해당 페이지에서 봇 사용을 금지해놓음)
+
+        browser=webdriver.Chrome(options=options)
+        browser.get("https://kr.indeed.com/jobs?q=python&limit=50") #페이지 열기
+
+        if browser.page_source: #browser.page_source가 있다면
+
+            soup=BeautifulSoup(browser.page_source, "html.parser")
             #html.parser 입력해서 변수 soup에게 html 보낸다고 알리기
 
             job_list=soup.find("ul", class_="jobsearch-ResultsList")

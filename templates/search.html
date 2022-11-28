@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Scrapper</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"> <!-- pico는 css 예쁘게 적용해주기 -->
+</head>
+<body>
+    <main class="container"> <!--pico css 기능 써서 가운데 정렬 & 예쁘게 하기 (class container 필수)-->
+        
+        <h1>Search Results for "{{keyword}}":</h1>
+        <!-- main.py에서 넘겨준 keyword가 출력됨 -->
+
+        <a target="_blank" href="/export?keyword={{keyword}}">Export to file</a> <!--target blank는 새 탭으로 열기-->
+
+        <figure> <!--table을 좌우로 스크롤하기-->
+            <table role="grid"> <!--grid는 table에 가로줄 만들기-->
+                <thead> <!--table의 head-->
+                    <tr>
+                        <th>Position</th>
+                        <th>Company</th>
+                        <th>Location</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody> <!--table의 body-->
+                    {% for job in jobs %} <!-- html에서 파이썬 사용하기 -->
+                        <tr>
+                            <td>{{job.position}}</td>
+                            <td>{{job.company}}</td>
+                            <td>{{job.location}}</td>
+                            <td>
+                                <a href="{{job.link}}" target="_blank">Apply now &rarr;</a> <!-- &rarr;는 화살표 -->
+                            </td>                    
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </figure>
+
+    </main>
+</body>
+</html>
